@@ -8,11 +8,17 @@
     "mapRoot": "./",
     "module": "es6",
     "moduleResolution": "node",
+    "noImplicitAny": false,
     "outDir": "../dist/out-tsc",
+    "removeComments": false,
     "sourceMap": true,
     "target": "es5",
     "typeRoots": [
       "../node_modules/@types"
-    ]
-  }
+    ],
+    "watch": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

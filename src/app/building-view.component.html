@@ -1,0 +1,38 @@
+<div id="building-menu">
+    <div *ngIf="building != null">
+        <div>{{building.name}}</div>
+        <div>You have {{building.amount|number:'1.0-0'}}</div>
+        <div>
+            <button (click)="building.build()">
+                Buy
+            </button>
+        </div>
+        <div>
+            Price:
+            <table class="price-table">
+                <tr *ngFor="let x of building.priceThrowaway">
+                    <td [ngClass]="'currency-title title-' + building.curCost[x].name">{{building.curCost[x].name|uppercase}}</td>
+                    <td [ngClass]="'currency-amount amount-' + building.curCost[x].name">{{building.price[x]|number:'1.0-3'}}</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            Growth:
+            <table class="effect-table">
+                <tr *ngFor="let x of building.growthThrowaway">
+                    <td [ngClass]="'currency-title title-' + building.currencies[x].name">{{building.currencies[x].name|uppercase}}</td>
+                    <td [ngClass]="'currency-amount amount-' + building.currencies[x].name">+{{building.growth[x]|number:'1.0-3'}}/s</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            Income:
+            <table class="income-table">
+                <tr *ngFor="let x of building.growthThrowaway">
+                    <td [ngClass]="'currency-title title-' + building.currencies[x].name">{{building.currencies[x].name|uppercase}}</td>
+                    <td [ngClass]="'currency-amount amount-' + building.currencies[x].name">+{{building.growth[x] * building.amount|number:'1.0-3'}}/s</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

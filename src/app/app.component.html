@@ -1,3 +1,20 @@
 <h1>
-  {{title}}
+  {{gameInfo.title}}
 </h1>
+<table id="currency-table">
+	<tr *ngFor="let x of gameInfo.currencies">
+		<td [ngClass]="'currency-title title-' + x.name">{{x.name|uppercase}}</td>
+		<td [ngClass]="'currency-amount amount-' + x.name">{{x.amount|number:'1.0-3'}}</td>
+		<td [ngClass]="'currency-income income-' + x.name">+{{x.income|number:'1.0-3'}}/s</td>
+	</tr>
+</table>
+
+<table id="building-table">
+	<tr *ngFor="let x of gameInfo.throwawayGridX" [ngClass]="'building-row building-row-' + x">
+		<td *ngFor="let y of gameInfo.throwawayGridY" (click)="selectBuilding(x, y)" [ngClass]="'building building-' + y">
+			<canvas width="30px" height="30px"></canvas>
+		</td>
+	</tr>
+</table>
+
+<building-view [building]="selectedBuilding"></building-view>
