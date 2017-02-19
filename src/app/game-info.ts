@@ -44,61 +44,61 @@ export class GameInfo {
         this.currencies = [
             {
                 name: 'A',
-                amount: 10000000,
+                amount: 20,
                 color: 'pink',
                 income: 0
             },
             {
                 name: 'B',
-                amount: 10000000,
+                amount: 20,
                 color: 'red',
                 income: 0
             },
             {
                 name: 'C',
-                amount: 10000000,
+                amount: 20,
                 color: 'orange',
                 income: 0
             },
             {
                 name: 'D',
-                amount: 10000000,
+                amount: 20,
                 color: 'yellow',
                 income: 0
             },
             {
                 name: 'E',
-                amount: 10000000,
+                amount: 20,
                 color: 'lime',
                 income: 0
             },
             {
                 name: 'F',
-                amount: 10000000,
+                amount: 20,
                 color: 'cyan',
                 income: 0
             },
             {
                 name: 'G',
-                amount: 10000000,
+                amount: 20,
                 color: 'blue',
                 income: 0
             },
             {
                 name: 'H',
-                amount: 10000000,
+                amount: 20,
                 color: 'purple',
                 income: 0
             },
             {
                 name: 'I',
-                amount: 10000000,
+                amount: 20,
                 color: 'brown',
                 income: 0
             },
             {
                 name: 'J',
-                amount: 10000000,
+                amount: 20,
                 color: 'black',
                 income: 0
             }
