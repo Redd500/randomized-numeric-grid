@@ -102,7 +102,7 @@ export class Generator implements Building {
 
             this.currencies.push(gameInfo.currencies[num]);
             
-            num = Math.floor((Math.random() * (maxGrowth - minGrowth) + minGrowth) * 10) / 10;
+            num = Math.floor((Math.random() * (maxGrowth + 0.1 - minGrowth) + minGrowth) * 10) / 10;
 
             this.growth.push(num);
 
@@ -114,12 +114,12 @@ export class Generator implements Building {
         this.priceThrowaway = Array<number>(this.curCost.length).fill(1).map((x,i)=>i);
 
         for (let x of this.curCost) {
-            let temp = Math.floor((Math.random() * (maxPrice - minPrice) + minPrice) * 1000) / 1000
+            let temp = Math.floor((Math.random() * (maxPrice + 0.1 - minPrice) + minPrice) * 10) / 10
 
             this.price.push(temp);
             this.basePrice.push(temp);
             
-            this.priceGrowth.push(Math.floor(Math.random() * (maxPriceGrowth * 100 - minPriceGrowth * 100) + minPriceGrowth * 100) / 100);
+            this.priceGrowth.push(Math.floor(Math.random() * (maxPriceGrowth * 10 + 1 - minPriceGrowth * 10) + minPriceGrowth * 10) / 10);
         }
     }
 
@@ -192,7 +192,7 @@ export class Generator implements Building {
 
     rerollBasePrice(pos: number): void {
         if (this.curCost[pos].amount >= this.rerollBasePriceCost) {
-            this.basePrice[pos] = Math.floor((Math.random() * (this.maxPrice - this.minPrice) + this.minPrice) * 1000) / 1000
+            this.basePrice[pos] = Math.floor((Math.random() * (this.maxPrice + 0.1 - this.minPrice) + this.minPrice) * 10) / 10
             this.price[pos] = this.basePrice[pos] * Math.pow(this.priceGrowth[pos], this.amount);
             this.curCost[pos].amount -= this.rerollBasePriceCost;
         }
@@ -200,14 +200,14 @@ export class Generator implements Building {
 
     rerollGrowth(pos: number): void {
         if (this.currencies[pos].amount >= this.rerollGrowthCost) {
-            this.growth[pos] = Math.floor((Math.random() * (this.maxGrowth - this.minGrowth) + this.minGrowth) * 10) / 10;
+            this.growth[pos] = Math.floor((Math.random() * (this.maxGrowth + 0.1 - this.minGrowth) + this.minGrowth) * 10) / 10;
             this.currencies[pos].amount -= this.rerollGrowthCost;
         }
     }
 
     rerollPriceGrowth(pos: number): void {
         if (this.curCost[pos].amount >= this.rerollPriceGrowthCost) {
-            this.priceGrowth[pos] = Math.floor(Math.random() * (this.maxPriceGrowth * 100 - this.minPriceGrowth * 100) + this.minPriceGrowth * 100) / 100;
+            this.priceGrowth[pos] = Math.floor(Math.random() * (this.maxPriceGrowth * 10 + 1 - this.minPriceGrowth * 10) + this.minPriceGrowth * 10) / 10;
             this.price[pos] = this.basePrice[pos] * Math.pow(this.priceGrowth[pos], this.amount);
             this.curCost[pos].amount -= this.rerollPriceGrowthCost;
         }
@@ -266,7 +266,7 @@ export class Generator implements Building {
 
             this.currencies.push(gameInfo.currencies[num]);
             
-            num = Math.floor((Math.random() * (this.maxGrowth - this.minGrowth) + this.minGrowth) * 10) / 10;
+            num = Math.floor((Math.random() * (this.maxGrowth + 0.1 - this.minGrowth) + this.minGrowth) * 10) / 10;
 
             this.growth.push(num);
 
@@ -281,12 +281,12 @@ export class Generator implements Building {
         this.basePrice = [];
         this.priceGrowth = [];
         for (let x of this.curCost) {
-            let temp = Math.floor((Math.random() * (this.maxPrice - this.minPrice) + this.minPrice) * 1000) / 1000
+            let temp = Math.floor((Math.random() * (this.maxPrice + 0.1 - this.minPrice) + this.minPrice) * 10) / 10
 
             this.price.push(temp);
             this.basePrice.push(temp);
             
-            this.priceGrowth.push(Math.floor(Math.random() * (this.maxPriceGrowth * 100 - this.minPriceGrowth * 100) + this.minPriceGrowth * 100) / 100);
+            this.priceGrowth.push(Math.floor(Math.random() * (this.maxPriceGrowth * 10 + 1 - this.minPriceGrowth * 10) + this.minPriceGrowth * 10) / 10);
         }
 
         x = 0;
