@@ -12,7 +12,16 @@ export class GameInfo {
 	buildingGrid: Building[][];
     buildingsInfo: BuildingInfo[];
 
+    addRowBasePrice: number;
+    addRowPriceGrowth: number;
+    addRowSelectGrowth: number;
+    addRowSelectedCurrencies: boolean[];
+
+    addRowPrice: number;
+
 	currencies: Currency[];
+    currencyThrowaway1: number[];
+    currencyThrowaway2: number[];
 
 	title: string;
 
@@ -21,6 +30,16 @@ export class GameInfo {
 
         this.gridSizeX = 1;
 		this.gridSizeY = 10;
+
+        this.addRowBasePrice = 1000;
+        this.addRowPriceGrowth = 5;
+        this.addRowSelectGrowth = 3;
+        this.addRowSelectedCurrencies = [false, false, false, false, false, false, false, false, false, false];
+
+        this.currencyThrowaway1 = Array<number>(this.addRowSelectedCurrencies.length/2).fill(1).map((x,i)=>i);
+        this.currencyThrowaway2 = Array<number>(this.addRowSelectedCurrencies.length/2).fill(1).map((x,i)=>i+5);
+
+        this.addRowPrice = this.addRowBasePrice * Math.pow(this.addRowPriceGrowth, this.gridSizeX - 1) * Math.pow(this.addRowSelectGrowth, 10);
 
         this.currencies = [
             {
@@ -114,5 +133,54 @@ export class GameInfo {
                 y.tick();
             }
         }
+    }
+
+    updateAddRowPrice(): void {
+        let selected = 0;
+        for (let x of this.addRowSelectedCurrencies) {
+            if (x) {
+                selected++;
+            }
+        }
+
+        this.addRowPrice = this.addRowBasePrice * Math.pow(this.addRowPriceGrowth, this.gridSizeX - 1) * Math.pow(this.addRowSelectGrowth, 10 - selected);
+    }
+
+    addRow(): void {
+        let x = 0;
+        let selectedCurrencies = [];
+        while (x < this.currencies.length) {
+            if (this.addRowSelectedCurrencies[x]) {
+                if (this.currencies[x].amount < this.addRowPrice) {
+                    return;
+                }
+                selectedCurrencies.push(this.currencies[x]);
+            }
+            x++
+        }
+
+        if (selectedCurrencies.length == 0) {
+            return;
+        }
+
+        x = 0;
+        while (x < selectedCurrencies.length) {
+            selectedCurrencies[x].amount -= this.addRowPrice;
+            x++;
+        }
+
+        this.gridSizeX++;
+        this.throwawayGridX = Array<number>(this.gridSizeX).fill(1).map((x,i)=>i)
+        this.buildingGrid.push(new Array<Building>(this.gridSizeY));
+
+        x = 0;
+        let final = this.buildingGrid.length - 1;
+        while (x < this.buildingGrid[final].length) {
+            this.buildingGrid[final][x] = this.buildingsInfo[0].createBuilding(this, final, x);
+            this.buildingGrid[final][x].draw();
+            x++;
+        }
+
+        this.updateAddRowPrice();
     }
 }

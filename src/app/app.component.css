@@ -1,9 +1,59 @@
-#currency-table
+#currency-table,
+#building-table,
+#add-row-price-table1,
+#add-row-price-table2
 {
 	border: 1px solid black;
 	border-spacing: 0;
 	display: inline-table;
 	vertical-align: top;
+}
+
+#add-row-buy-table
+{
+	border: 1px solid black;
+	border-spacing: 0;
+	vertical-align: top;
+}
+
+#add-row
+{
+	display: inline-block;
+}
+
+.buy-button
+{
+	width: 184px;
+	height: 50px;
+	border: 1px solid black;
+	padding: 0;
+	background-color: #888888;
+}
+
+.button-holder
+{
+	padding: 0;
+}
+
+.select-check
+{
+	height: 30px;
+	width: 30px;
+	border: 1px solid black;
+	vertical-align: middle;
+	text-align: center;
+	background-color: #888888;
+}
+
+.currency-amount-extra
+{
+	height: 30px;
+	width: 180px;
+	border: 1px solid black;
+	vertical-align: middle;
+	padding: 0;
+    padding-left: 2px;
+	background-color: #888888;
 }
 
 .currency-title
@@ -155,14 +205,6 @@
 .income-J
 {
 	color: black;
-}
-
-#building-table
-{
-	border: 1px solid black;
-	border-spacing: 0;
-	display: inline-table;
-	vertical-align: top;
 }
 
 .building

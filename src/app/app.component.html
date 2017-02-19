@@ -17,4 +17,37 @@
 	</tr>
 </table>
 
-<building-view [building]="selectedBuilding"></building-view>
+<div id="add-row">
+	<table id="add-row-buy-table">
+		<tr>
+			<td class="button-holder">
+				<button (click)="gameInfo.addRow()" [ngClass]="'buy-button'">
+					Add Row
+				</button>
+			</td>
+		</tr>
+		<tr>
+			<td class="currency-amount-extra">
+				Price: {{gameInfo.addRowPrice|number:'1.0-1'}} each of the selected currencies
+			</td>
+		</tr>
+	</table>
+	<table id="add-row-price-table1">
+		<tr *ngFor="let x of gameInfo.currencyThrowaway1">
+			<td [ngClass]="'currency-title title-' + gameInfo.currencies[x].name">{{gameInfo.currencies[x].name|uppercase}}</td>
+			<td class="select-check">
+				<input [(ngModel)]="gameInfo.addRowSelectedCurrencies[x]" type="checkbox" (change)="gameInfo.updateAddRowPrice()"/>
+			</td>
+		</tr>
+	</table>
+	<table id="add-row-price-table2">
+		<tr *ngFor="let x of gameInfo.currencyThrowaway2">
+			<td [ngClass]="'currency-title title-' + gameInfo.currencies[x].name">{{gameInfo.currencies[x].name|uppercase}}</td>
+			<td class="select-check">
+				<input [(ngModel)]="gameInfo.addRowSelectedCurrencies[x]" type="checkbox" (change)="gameInfo.updateAddRowPrice()"/>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<building-view [building]="selectedBuilding" [gameInfo]="gameInfo"></building-view>

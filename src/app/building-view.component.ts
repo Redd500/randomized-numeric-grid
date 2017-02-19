@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Building } from './building.interface';
+import { GameInfo } from './game-info';
 
 @Component({
 	selector: 'building-view',
@@ -9,6 +10,7 @@ import { Building } from './building.interface';
 
 export class BuildingViewComponent {
     @Input() building: Building;
+    @Input() gameInfo: GameInfo;
 
     ngOnInit(): void {
         console.log(this.building);

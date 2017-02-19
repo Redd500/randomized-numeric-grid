@@ -1,27 +1,38 @@
 <div id="building-menu">
     <div *ngIf="building != null">
-        <div>{{building.name}}</div>
+        <div>{{building.name}} Tier {{building.tier}}</div>
         <div>You have {{building.amount|number:'1.0-0'}}</div>
         <div>
-            <button (click)="building.build()">
+            <button (click)="building.build()" [ngClass]="'buy-button'">
                 Buy
             </button>
         </div>
         <div>
-            Price:
+            Price: Reroll all stats including tier<br>
+            Possible Tiers: {{building.tierOptions}}
             <table class="price-table">
                 <tr *ngFor="let x of building.priceThrowaway">
                     <td [ngClass]="'currency-title title-' + building.curCost[x].name">{{building.curCost[x].name|uppercase}}</td>
                     <td [ngClass]="'currency-amount amount-' + building.curCost[x].name">{{building.price[x]|number:'1.0-1'}}</td>
+                    <td class="button-holder">
+                        <button [ngClass]="'currency-amount currency-button amount-' + building.curCost[x].name" (click)="building.rerollTier(gameInfo)">
+                            Reroll: {{building.rerollTierCost|number:'1.0-1'}}
+                        </button>
+                    </td>
                 </tr>
             </table>
         </div>
         <div>
-            Income:
+            Income: Reroll for different currencies
             <table class="income-table">
                 <tr *ngFor="let x of building.growthThrowaway">
                     <td [ngClass]="'currency-title title-' + building.currencies[x].name">{{building.currencies[x].name|uppercase}}</td>
                     <td [ngClass]="'currency-amount amount-' + building.currencies[x].name">+{{building.growth[x] * building.amount|number:'1.0-1'}}/s</td>
+                    <td class="button-holder">
+                        <button [ngClass]="'currency-amount currency-button amount-' + building.currencies[x].name" (click)="building.rerollCurrency(x, gameInfo)">
+                            Reroll: {{building.rerollCurrencyCost|number:'1.0-1'}}
+                        </button>
+                    </td>
                 </tr>
             </table>
         </div>

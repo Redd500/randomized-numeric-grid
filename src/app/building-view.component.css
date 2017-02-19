@@ -9,6 +9,15 @@
 	vertical-align: top;
 }
 
+.buy-button
+{
+	width: 144px;
+	height: 34px;
+	border: 2px solid black;
+	padding: 0;
+	background-color: #888888;
+}
+
 .currency-title
 {
 	width: 30px;

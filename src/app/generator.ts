@@ -6,6 +6,10 @@ export class Generator implements Building {
     name: string;
     amount: number;
     currencies: Currency[];
+    tier: number;
+    tierChances: number[];
+    tierOptions: number[];
+    tierTotalChances: number;
     growthThrowaway: number[];
     growth: number[];
     priceThrowaway: number[];
@@ -24,6 +28,8 @@ export class Generator implements Building {
     rerollBasePriceCost: number;
     rerollGrowthCost: number;
     rerollPriceGrowthCost: number;
+    rerollCurrencyCost: number;
+    rerollTierCost: number;
 
     constructor(
         name: string,
@@ -41,6 +47,8 @@ export class Generator implements Building {
         ) {
         this.name = name;
         this.amount = 0;
+        this.tierChances = multiChances;
+        this.tierOptions = multipliers;
         this.growth = [];
         this.row = row;
         this.col = col;
@@ -59,12 +67,16 @@ export class Generator implements Building {
         this.rerollBasePriceCost = 500;
         this.rerollGrowthCost = 2000;
         this.rerollPriceGrowthCost = 10000;
+        this.rerollCurrencyCost = 25000;
+        this.rerollTierCost = 50000;
 
         let multiChanceTotal = 0;
 
         for (let x of multiChances) {
             multiChanceTotal += x;
         }
+
+        this.tierTotalChances = multiChanceTotal;
         
         let multi = Math.floor(Math.random() * multiChanceTotal);
         let currentChance = multiChances[0];
@@ -74,6 +86,7 @@ export class Generator implements Building {
         while (true) {
             if (multi < currentChance) {
                 actualMulti = multipliers[pos];
+                this.tier = actualMulti;
                 break;
             }
 
@@ -198,6 +211,91 @@ export class Generator implements Building {
             this.price[pos] = this.basePrice[pos] * Math.pow(this.priceGrowth[pos], this.amount);
             this.curCost[pos].amount -= this.rerollPriceGrowthCost;
         }
+    }
+
+    rerollCurrency(pos: number, gameInfo: GameInfo): void {
+        if (this.currencies[pos].amount >= this.rerollCurrencyCost) {
+            this.currencies[pos].amount -= this.rerollCurrencyCost;
+            this.currencies[pos] = gameInfo.currencies[Math.floor(Math.random() * 10)];
+
+            if (this.curCost[pos]) {
+                this.curCost[pos] = this.currencies[pos];
+            }
+
+            this.draw();
+        }
+    }
+
+    rerollTier(gameInfo: GameInfo): void {
+        let x = 0;
+        while (x < this.curCost.length) {
+            if (this.curCost[x].amount < this.price[x]) {
+                return;
+            }
+            x++;
+        }
+
+        x = 0;
+        while (x < this.curCost.length) {
+            this.curCost[x].amount -= this.rerollTierCost;
+            x++;
+        }
+
+        let multi = Math.floor(Math.random() * this.tierTotalChances);
+        let currentChance = this.tierChances[0];
+        let pos = 0;
+
+        while (true) {
+            if (multi < currentChance) {
+                this.tier = this.tierOptions[pos];
+                break;
+            }
+
+            pos++;
+            currentChance += this.tierChances[pos];
+        }
+
+        this.growthThrowaway = Array<number>(this.tier).fill(1).map((x,i)=>i);
+
+        pos = 0;
+        this.currencies = [];
+        this.growth = [];
+        this.curCost = [];
+        while (pos < this.tier) {
+            let num = Math.floor(Math.random() * gameInfo.currencies.length);
+
+            this.currencies.push(gameInfo.currencies[num]);
+            
+            num = Math.floor((Math.random() * (this.maxGrowth - this.minGrowth) + this.minGrowth) * 10) / 10;
+
+            this.growth.push(num);
+
+            pos++
+        }
+
+        this.curCost.push(this.currencies[0]);
+
+        this.priceThrowaway = Array<number>(this.curCost.length).fill(1).map((x,i)=>i);
+
+        this.price = [];
+        this.basePrice = [];
+        this.priceGrowth = [];
+        for (let x of this.curCost) {
+            let temp = Math.floor((Math.random() * (this.maxPrice - this.minPrice) + this.minPrice) * 1000) / 1000
+
+            this.price.push(temp);
+            this.basePrice.push(temp);
+            
+            this.priceGrowth.push(Math.floor(Math.random() * (this.maxPriceGrowth * 100 - this.minPriceGrowth * 100) + this.minPriceGrowth * 100) / 100);
+        }
+
+        x = 0;
+        while (x < this.price.length) {
+            this.price[x] = this.basePrice[x] * Math.pow(this.priceGrowth[x], this.amount);
+            x++;
+        }
+
+        this.draw();
     }
 
 }
