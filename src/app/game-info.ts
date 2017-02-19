@@ -44,61 +44,61 @@ export class GameInfo {
         this.currencies = [
             {
                 name: 'A',
-                amount: 20,
+                amount: 10000000,
                 color: 'pink',
                 income: 0
             },
             {
                 name: 'B',
-                amount: 20,
+                amount: 10000000,
                 color: 'red',
                 income: 0
             },
             {
                 name: 'C',
-                amount: 20,
+                amount: 10000000,
                 color: 'orange',
                 income: 0
             },
             {
                 name: 'D',
-                amount: 20,
+                amount: 10000000,
                 color: 'yellow',
                 income: 0
             },
             {
                 name: 'E',
-                amount: 20,
+                amount: 10000000,
                 color: 'lime',
                 income: 0
             },
             {
                 name: 'F',
-                amount: 20,
+                amount: 10000000,
                 color: 'cyan',
                 income: 0
             },
             {
                 name: 'G',
-                amount: 20,
+                amount: 10000000,
                 color: 'blue',
                 income: 0
             },
             {
                 name: 'H',
-                amount: 20,
+                amount: 10000000,
                 color: 'purple',
                 income: 0
             },
             {
                 name: 'I',
-                amount: 20,
+                amount: 10000000,
                 color: 'brown',
                 income: 0
             },
             {
                 name: 'J',
-                amount: 20,
+                amount: 10000000,
                 color: 'black',
                 income: 0
             }
@@ -177,7 +177,6 @@ export class GameInfo {
         let final = this.buildingGrid.length - 1;
         while (x < this.buildingGrid[final].length) {
             this.buildingGrid[final][x] = this.buildingsInfo[0].createBuilding(this, final, x);
-            this.buildingGrid[final][x].draw();
             x++;
         }
 

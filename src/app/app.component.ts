@@ -22,7 +22,7 @@ export class AppComponent {
 		}, 1000);
 	}
 	
-	ngAfterViewInit() {
+	ngAfterViewChecked() {
 		for (let x of this.gameInfo.buildingGrid) {
 			for (let y of x) {
 				y.draw();
