@@ -10,12 +10,12 @@ export class GeneratorInfo {
             [50, 30, 10, 2],
             [1, 2, 3, 5],
             gameInfo,
+            0.2,
+            5,
             1,
-            5,
-            5,
             15,
-            1.3,
-            1.5,
+            1.1,
+            2.2,
             row,
             col
         );

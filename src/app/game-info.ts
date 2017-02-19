@@ -20,7 +20,7 @@ export class GameInfo {
         this.title = 'Randomized Numeric Grid';
 
         this.gridSizeX = 1;
-		this.gridSizeY = 5;
+		this.gridSizeY = 10;
 
         this.currencies = [
             {

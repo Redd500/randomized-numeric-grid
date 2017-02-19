@@ -1,6 +1,8 @@
 .price-table,
 .effect-table,
-.income-table
+.income-table,
+.base-price-table,
+.price-growth-table
 {
 	border: 1px solid black;
 	border-spacing: 0;
@@ -25,6 +27,12 @@
 	padding: 0;
     padding-left: 2px;
 	background-color: #888888;
+}
+
+.currency-button
+{
+	height: 32px;
+	width: 144px;
 }
 
 .title-A
@@ -135,4 +143,9 @@
 .amount-J
 {
 	color: black;
+}
+
+.button-holder
+{
+	padding: 0;
 }

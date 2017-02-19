@@ -12,16 +12,7 @@
             <table class="price-table">
                 <tr *ngFor="let x of building.priceThrowaway">
                     <td [ngClass]="'currency-title title-' + building.curCost[x].name">{{building.curCost[x].name|uppercase}}</td>
-                    <td [ngClass]="'currency-amount amount-' + building.curCost[x].name">{{building.price[x]|number:'1.0-3'}}</td>
-                </tr>
-            </table>
-        </div>
-        <div>
-            Growth:
-            <table class="effect-table">
-                <tr *ngFor="let x of building.growthThrowaway">
-                    <td [ngClass]="'currency-title title-' + building.currencies[x].name">{{building.currencies[x].name|uppercase}}</td>
-                    <td [ngClass]="'currency-amount amount-' + building.currencies[x].name">+{{building.growth[x]|number:'1.0-3'}}/s</td>
+                    <td [ngClass]="'currency-amount amount-' + building.curCost[x].name">{{building.price[x]|number:'1.0-1'}}</td>
                 </tr>
             </table>
         </div>
@@ -30,7 +21,49 @@
             <table class="income-table">
                 <tr *ngFor="let x of building.growthThrowaway">
                     <td [ngClass]="'currency-title title-' + building.currencies[x].name">{{building.currencies[x].name|uppercase}}</td>
-                    <td [ngClass]="'currency-amount amount-' + building.currencies[x].name">+{{building.growth[x] * building.amount|number:'1.0-3'}}/s</td>
+                    <td [ngClass]="'currency-amount amount-' + building.currencies[x].name">+{{building.growth[x] * building.amount|number:'1.0-1'}}/s</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            Growth: +{{building.minGrowth}}/s - +{{building.maxGrowth}}/s
+            <table class="effect-table">
+                <tr *ngFor="let x of building.growthThrowaway">
+                    <td [ngClass]="'currency-title title-' + building.currencies[x].name">{{building.currencies[x].name|uppercase}}</td>
+                    <td [ngClass]="'currency-amount amount-' + building.currencies[x].name">+{{building.growth[x]|number:'1.0-1'}}/s</td>
+                    <td class="button-holder">
+                        <button [ngClass]="'currency-amount currency-button amount-' + building.currencies[x].name" (click)="building.rerollGrowth(x)">
+                            Reroll: {{building.rerollGrowthCost|number:'1.0-1'}}
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            Base Price: {{building.minPrice}} - {{building.maxPrice}}
+            <table class="base-price-table">
+                <tr *ngFor="let x of building.priceThrowaway">
+                    <td [ngClass]="'currency-title title-' + building.curCost[x].name">{{building.curCost[x].name|uppercase}}</td>
+                    <td [ngClass]="'currency-amount amount-' + building.curCost[x].name">{{building.basePrice[x]|number:'1.0-1'}}</td>
+                    <td class="button-holder">
+                        <button [ngClass]="'currency-amount currency-button amount-' + building.curCost[x].name" (click)="building.rerollBasePrice(x)">
+                            Reroll: {{building.rerollBasePriceCost|number:'1.0-1'}}
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            Price Growth: {{building.minPriceGrowth}}x - {{building.maxPriceGrowth}}x
+            <table class="price-growth-table">
+                <tr *ngFor="let x of building.priceThrowaway">
+                    <td [ngClass]="'currency-title title-' + building.curCost[x].name">{{building.curCost[x].name|uppercase}}</td>
+                    <td [ngClass]="'currency-amount amount-' + building.curCost[x].name">{{building.priceGrowth[x]|number:'1.0-1'}}x</td>
+                    <td class="button-holder">
+                        <button [ngClass]="'currency-amount currency-button amount-' + building.curCost[x].name" (click)="building.rerollPriceGrowth(x)">
+                            Reroll: {{building.rerollPriceGrowthCost|number:'1.0-1'}}
+                        </button>
+                    </td>
                 </tr>
             </table>
         </div>

@@ -13,7 +13,20 @@ export interface Building {
     priceGrowth: number[];
     row: number;
     col: number;
+    minGrowth: number;
+    maxGrowth: number;
+    minPrice: number;
+    maxPrice: number;
+    basePrice: number[];
+    minPriceGrowth: number;
+    maxPriceGrowth: number;
+    rerollBasePriceCost: number;
+    rerollGrowthCost: number;
+    rerollPriceGrowthCost: number;
     draw(): void;
     tick(): void;
     build(): void;
+    rerollBasePrice(pos: number): void;
+    rerollGrowth(pos: number): void;
+    rerollPriceGrowth(pos: number): void;
 }

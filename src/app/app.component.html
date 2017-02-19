@@ -4,8 +4,8 @@
 <table id="currency-table">
 	<tr *ngFor="let x of gameInfo.currencies">
 		<td [ngClass]="'currency-title title-' + x.name">{{x.name|uppercase}}</td>
-		<td [ngClass]="'currency-amount amount-' + x.name">{{x.amount|number:'1.0-3'}}</td>
-		<td [ngClass]="'currency-income income-' + x.name">+{{x.income|number:'1.0-3'}}/s</td>
+		<td [ngClass]="'currency-amount amount-' + x.name">{{x.amount|number:'1.0-1'}}</td>
+		<td [ngClass]="'currency-income income-' + x.name">+{{x.income|number:'1.0-1'}}/s</td>
 	</tr>
 </table>
 

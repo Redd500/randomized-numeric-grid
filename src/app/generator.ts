@@ -14,6 +14,16 @@ export class Generator implements Building {
     priceGrowth: number[];
     row: number;
     col: number;
+    minGrowth: number;
+    maxGrowth: number;
+    minPrice: number;
+    maxPrice: number;
+    basePrice: number[];
+    minPriceGrowth: number;
+    maxPriceGrowth: number;
+    rerollBasePriceCost: number;
+    rerollGrowthCost: number;
+    rerollPriceGrowthCost: number;
 
     constructor(
         name: string,
@@ -39,6 +49,16 @@ export class Generator implements Building {
         this.curCost = [];
         this.price = [];
         this.priceGrowth = [];
+        this.minGrowth = minGrowth;
+        this.maxGrowth = maxGrowth;
+        this.minPrice = minPrice;
+        this.maxPrice = maxPrice;
+        this.minPriceGrowth = minPriceGrowth;
+        this.maxPriceGrowth = maxPriceGrowth;
+        this.basePrice = [];
+        this.rerollBasePriceCost = 500;
+        this.rerollGrowthCost = 2000;
+        this.rerollPriceGrowthCost = 10000;
 
         let multiChanceTotal = 0;
 
@@ -69,7 +89,7 @@ export class Generator implements Building {
 
             this.currencies.push(gameInfo.currencies[num]);
             
-            num = Math.floor(Math.random() * (maxGrowth - minGrowth) + minGrowth);
+            num = Math.floor((Math.random() * (maxGrowth - minGrowth) + minGrowth) * 10) / 10;
 
             this.growth.push(num);
 
@@ -81,7 +101,11 @@ export class Generator implements Building {
         this.priceThrowaway = Array<number>(this.curCost.length).fill(1).map((x,i)=>i);
 
         for (let x of this.curCost) {
-            this.price.push(Math.floor((Math.random() * (maxPrice - minPrice) + minPrice) * 1000) / 1000);
+            let temp = Math.floor((Math.random() * (maxPrice - minPrice) + minPrice) * 1000) / 1000
+
+            this.price.push(temp);
+            this.basePrice.push(temp);
+            
             this.priceGrowth.push(Math.floor(Math.random() * (maxPriceGrowth * 100 - minPriceGrowth * 100) + minPriceGrowth * 100) / 100);
         }
     }
@@ -148,8 +172,32 @@ export class Generator implements Building {
         x = 0;
         while (x < this.curCost.length) {
             this.curCost[x].amount -= this.price[x];
-            this.price[x] *= this.priceGrowth[x];
+            this.price[x] = this.basePrice[x] * Math.pow(this.priceGrowth[x], this.amount);
             x++;
         }
     }
+
+    rerollBasePrice(pos: number): void {
+        if (this.curCost[pos].amount >= this.rerollBasePriceCost) {
+            this.basePrice[pos] = Math.floor((Math.random() * (this.maxPrice - this.minPrice) + this.minPrice) * 1000) / 1000
+            this.price[pos] = this.basePrice[pos] * Math.pow(this.priceGrowth[pos], this.amount);
+            this.curCost[pos].amount -= this.rerollBasePriceCost;
+        }
+    }
+
+    rerollGrowth(pos: number): void {
+        if (this.currencies[pos].amount >= this.rerollGrowthCost) {
+            this.growth[pos] = Math.floor((Math.random() * (this.maxGrowth - this.minGrowth) + this.minGrowth) * 10) / 10;
+            this.currencies[pos].amount -= this.rerollGrowthCost;
+        }
+    }
+
+    rerollPriceGrowth(pos: number): void {
+        if (this.curCost[pos].amount >= this.rerollPriceGrowthCost) {
+            this.priceGrowth[pos] = Math.floor(Math.random() * (this.maxPriceGrowth * 100 - this.minPriceGrowth * 100) + this.minPriceGrowth * 100) / 100;
+            this.price[pos] = this.basePrice[pos] * Math.pow(this.priceGrowth[pos], this.amount);
+            this.curCost[pos].amount -= this.rerollPriceGrowthCost;
+        }
+    }
+
 }
