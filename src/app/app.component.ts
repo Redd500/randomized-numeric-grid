@@ -101,20 +101,23 @@ export class AppComponent {
 		while (x < save.buildingGrid.length) {
 			let y = 0;
 			while (y < save.buildingGrid[x].length) {
-				this.gameInfo.buildingGrid[x][y] = new Generator(
-													save.buildingGrid[x][y].name,
-													save.buildingGrid[x][y].tierChances,
-													save.buildingGrid[x][y].tierOptions,
-													this.gameInfo,
-													save.buildingGrid[x][y].minGrowth,
-													save.buildingGrid[x][y].maxGrowth,
-													save.buildingGrid[x][y].minPrice,
-													save.buildingGrid[x][y].maxPrice,
-													save.buildingGrid[x][y].minPriceGrowth,
-													save.buildingGrid[x][y].maxPriceGrowth,
-													x,
-													y);
+				this.gameInfo.buildingGrid[x][y] = this.gameInfo.buildingsInfo[0].createBuilding(this.gameInfo, x, y);
 				for (var key in save.buildingGrid[x][y]) {
+					if (key == 'tierChances' ||
+						key == 'tierOptions' ||
+						key == 'minGrowth' ||
+						key == 'maxGrowth' ||
+						key == 'minPrice' ||
+						key == 'maxPrice' ||
+						key == 'minPriceGrowth' ||
+						key == 'maxPriceGrowth' ||
+						key == 'rerollBasePriceCost' ||
+						key == 'rerollGrowthCost' ||
+						key == 'rerollPriceGrowthCost' ||
+						key == 'rerollCurrencyCost' ||
+						key == 'rerollTierCost') {
+							continue;
+					}
 					if (save.buildingGrid[x][y].hasOwnProperty(key)) {
 						this.gameInfo.buildingGrid[x][y][key] = save.buildingGrid[x][y][key];
 					}

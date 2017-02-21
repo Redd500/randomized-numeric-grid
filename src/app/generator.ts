@@ -54,12 +54,12 @@ export class Generator implements Building {
         row: number,
         col: number
         ) {
-        this.rowMaxBasePriceMulti = 2.20;
-        this.rowMinBasePriceMulti = 1.7;
-        this.rowMaxPriceGrowthMulti = 1.1;
-        this.rowMaxGrowthMulti = 1.95;
-        this.rowMinGrowthMulti = 1.5;
-        this.rowRerollMulti = 1.85;
+        this.rowMaxBasePriceMulti = 1.55;
+        this.rowMinBasePriceMulti = 1.30;
+        this.rowMaxPriceGrowthMulti = 1.06;
+        this.rowMaxGrowthMulti = 1.45;
+        this.rowMinGrowthMulti = 1.25;
+        this.rowRerollMulti = 1.40;
         this.name = name;
         this.amount = 0;
         this.tierChances = multiChances;
@@ -82,8 +82,8 @@ export class Generator implements Building {
         this.selected = false;
         this.rerollBasePriceCost = Math.floor(500 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
         this.rerollGrowthCost = Math.floor(2000 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
-        this.rerollPriceGrowthCost = Math.floor(10000 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
-        this.rerollCurrencyCost = Math.floor(25000 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
+        this.rerollPriceGrowthCost = Math.floor(20000 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
+        this.rerollCurrencyCost = Math.floor(10000 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
         this.rerollTierCost = Math.floor(50000 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
         this.selectedPhase = 0;
         this.canBuy = false;
