@@ -234,7 +234,7 @@ export class Generator implements Building {
             .getElementsByTagName('div')[0];
         let i = 0;
         while (i < gameInfo.currencies.length) {
-            element.classList.remove('selected-' + this.currencies[i].name);
+            element.classList.remove('selected-' + gameInfo.currencies[i].name);
             i++;
         }
         element.classList.remove('selected');
