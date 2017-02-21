@@ -63,7 +63,7 @@ export class AppComponent {
 
 	selectBuilding(row: number, col: number) {
 		if (this.selectedBuilding) {
-			this.selectedBuilding.deselect();
+			this.selectedBuilding.deselect(this.gameInfo);
 		}
 		this.selectedBuilding = this.gameInfo.buildingGrid[row][col];
 		this.selectedBuilding.select();

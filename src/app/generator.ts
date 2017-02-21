@@ -227,13 +227,13 @@ export class Generator implements Building {
         this.selectedPhase = 0;
     }
 
-    deselect(): void {
+    deselect(gameInfo: GameInfo): void {
         this.selected = false;
         let element = document.getElementsByClassName('building-row-' + this.row)[0]
             .getElementsByClassName('building-' + this.col)[0]
             .getElementsByTagName('div')[0];
         let i = 0;
-        while (i < this.currencies.length) {
+        while (i < gameInfo.currencies.length) {
             element.classList.remove('selected-' + this.currencies[i].name);
             i++;
         }

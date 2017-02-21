@@ -39,6 +39,6 @@ export interface Building {
     rerollCurrency(pos: number, gameInfo: GameInfo): void;
     rerollTier(gameInfo: GameInfo): void;
     select(): void;
-    deselect(): void;
+    deselect(gameInfo: GameInfo): void;
     selectTick(): void;
 }
