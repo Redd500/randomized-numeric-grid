@@ -9,13 +9,25 @@
 	vertical-align: top;
 }
 
+.multiple-buy
+{
+	width: 40px;
+}
+
 .buy-button
 {
-	width: 144px;
+	width: 60px;
 	height: 34px;
 	border: 2px solid black;
+	background-color: #AAAAAA;
 	padding: 0;
-	background-color: #888888;
+}
+
+.buy-button:hover,
+.currency-button:hover
+{
+	background-color: black;
+	color: white;
 }
 
 .currency-title
@@ -31,17 +43,24 @@
 {
 	height: 30px;
 	width: 140px;
+	max-width: 140px;
 	border: 1px solid black;
 	vertical-align: middle;
 	padding: 0;
     padding-left: 2px;
-	background-color: #888888;
 }
 
 .currency-button
 {
 	height: 32px;
 	width: 144px;
+	background-color: #AAAAAA;
+}
+
+.buy-button:disabled,
+.currency-button:disabled
+{
+	text-decoration: line-through;
 }
 
 .title-A
@@ -50,31 +69,16 @@
 	color: black;
 }
 
-.amount-A
-{
-	color: pink;
-}
-
 .title-B
 {
 	background-color: red;
 	color: white;
 }
 
-.amount-B
-{
-	color: red;
-}
-
 .title-C
 {
 	background-color: orange;
-	color: white;
-}
-
-.amount-C
-{
-	color: orange;
+	color: black;
 }
 
 .title-D
@@ -83,20 +87,10 @@
 	color: black;
 }
 
-.amount-D
-{
-	color: yellow;
-}
-
 .title-E
 {
 	background-color: lime;
 	color: black;
-}
-
-.amount-E
-{
-	color: lime;
 }
 
 .title-F
@@ -105,20 +99,10 @@
 	color: black;
 }
 
-.amount-F
-{
-	color: cyan;
-}
-
 .title-G
 {
 	background-color: blue;
 	color: white;
-}
-
-.amount-G
-{
-	color: blue;
 }
 
 .title-H
@@ -127,31 +111,16 @@
 	color: white;
 }
 
-.amount-H
-{
-	color: purple;
-}
-
 .title-I
 {
 	background-color: brown;
 	color: white;
 }
 
-.amount-I
-{
-	color: brown;
-}
-
 .title-J
 {
 	background-color: black;
 	color: white;
-}
-
-.amount-J
-{
-	color: black;
 }
 
 .button-holder

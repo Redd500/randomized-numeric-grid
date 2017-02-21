@@ -5,6 +5,11 @@ export interface Building {
     name: string;
     amount: number;
     currencies: Currency[];
+    selected: boolean;
+    tier: number;
+    tierChances: number[];
+    tierOptions: number[];
+    tierTotalChances: number;
     growthThrowaway: number[];
     growth: number[];
     priceThrowaway: number[];
@@ -23,10 +28,17 @@ export interface Building {
     rerollBasePriceCost: number;
     rerollGrowthCost: number;
     rerollPriceGrowthCost: number;
+    rerollTierCost: number;
+    canBuy: boolean;
     draw(): void;
     tick(): void;
-    build(): void;
+    build(amount: number): void;
     rerollBasePrice(pos: number): void;
     rerollGrowth(pos: number): void;
     rerollPriceGrowth(pos: number): void;
+    rerollCurrency(pos: number, gameInfo: GameInfo): void;
+    rerollTier(gameInfo: GameInfo): void;
+    select(): void;
+    deselect(): void;
+    selectTick(): void;
 }

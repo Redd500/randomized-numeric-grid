@@ -3,4 +3,5 @@ export interface Currency {
 	amount: number;
 	color: string;
 	income: number;
+	unlocked: boolean;
 }

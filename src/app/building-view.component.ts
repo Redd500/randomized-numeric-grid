@@ -15,4 +15,8 @@ export class BuildingViewComponent {
     ngOnInit(): void {
         console.log(this.building);
     }
+
+	hasE(val: string): boolean {
+		return val.includes('e');
+	}
 }

@@ -6,6 +6,7 @@ export class Generator implements Building {
     name: string;
     amount: number;
     currencies: Currency[];
+    selected: boolean;
     tier: number;
     tierChances: number[];
     tierOptions: number[];
@@ -30,6 +31,14 @@ export class Generator implements Building {
     rerollPriceGrowthCost: number;
     rerollCurrencyCost: number;
     rerollTierCost: number;
+    selectedPhase: number;
+    rowMinBasePriceMulti: number;
+    rowMaxBasePriceMulti: number;
+    rowMaxPriceGrowthMulti: number;
+    rowMinGrowthMulti: number;
+    rowMaxGrowthMulti: number;
+    rowRerollMulti: number;
+    canBuy: boolean;
 
     constructor(
         name: string,
@@ -45,6 +54,12 @@ export class Generator implements Building {
         row: number,
         col: number
         ) {
+        this.rowMaxBasePriceMulti = 2.20;
+        this.rowMinBasePriceMulti = 1.7;
+        this.rowMaxPriceGrowthMulti = 1.1;
+        this.rowMaxGrowthMulti = 1.95;
+        this.rowMinGrowthMulti = 1.5;
+        this.rowRerollMulti = 1.85;
         this.name = name;
         this.amount = 0;
         this.tierChances = multiChances;
@@ -57,18 +72,22 @@ export class Generator implements Building {
         this.curCost = [];
         this.price = [];
         this.priceGrowth = [];
-        this.minGrowth = minGrowth;
-        this.maxGrowth = maxGrowth;
-        this.minPrice = minPrice;
-        this.maxPrice = maxPrice;
+        this.minGrowth = Math.floor(minGrowth * Math.pow(this.rowMinGrowthMulti, this.row) * 100) / 100;
+        this.maxGrowth = Math.floor(maxGrowth * Math.pow(this.rowMaxGrowthMulti, this.row) * 100) / 100;
+        this.minPrice = Math.floor(minPrice * Math.pow(this.rowMinBasePriceMulti, this.row) * 100) / 100;
+        this.maxPrice = Math.floor(maxPrice * Math.pow(this.rowMaxBasePriceMulti, this.row) * 100) / 100;
         this.minPriceGrowth = minPriceGrowth;
-        this.maxPriceGrowth = maxPriceGrowth;
+        this.maxPriceGrowth = Math.floor(maxPriceGrowth * Math.pow(this.rowMaxPriceGrowthMulti, this.row) * 100) / 100;
         this.basePrice = [];
-        this.rerollBasePriceCost = 500;
-        this.rerollGrowthCost = 2000;
-        this.rerollPriceGrowthCost = 10000;
-        this.rerollCurrencyCost = 25000;
-        this.rerollTierCost = 50000;
+        this.selected = false;
+        this.rerollBasePriceCost = Math.floor(500 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
+        this.rerollGrowthCost = Math.floor(2000 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
+        this.rerollPriceGrowthCost = Math.floor(10000 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
+        this.rerollCurrencyCost = Math.floor(25000 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
+        this.rerollTierCost = Math.floor(50000 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
+        this.selectedPhase = 0;
+        this.canBuy = false;
+
 
         let multiChanceTotal = 0;
 
@@ -102,7 +121,7 @@ export class Generator implements Building {
 
             this.currencies.push(gameInfo.currencies[num]);
             
-            num = Math.floor((Math.random() * (maxGrowth + 0.1 - minGrowth) + minGrowth) * 10) / 10;
+            num = Math.floor((Math.random() * (maxGrowth + 0.01 - minGrowth) + minGrowth) * 100) / 100;
 
             this.growth.push(num);
 
@@ -114,12 +133,12 @@ export class Generator implements Building {
         this.priceThrowaway = Array<number>(this.curCost.length).fill(1).map((x,i)=>i);
 
         for (let x of this.curCost) {
-            let temp = Math.floor((Math.random() * (maxPrice + 0.1 - minPrice) + minPrice) * 10) / 10
+            let temp = Math.floor((Math.random() * (maxPrice + 0.01 - minPrice) + minPrice) * 100) / 100
 
-            this.price.push(temp);
+            this.price.push(0);
             this.basePrice.push(temp);
             
-            this.priceGrowth.push(Math.floor(Math.random() * (maxPriceGrowth * 10 + 1 - minPriceGrowth * 10) + minPriceGrowth * 10) / 10);
+            this.priceGrowth.push(Math.floor(Math.random() * (maxPriceGrowth * 100 + 1 - minPriceGrowth * 100) + minPriceGrowth * 100) / 100);
         }
     }
 
@@ -129,6 +148,10 @@ export class Generator implements Building {
             .getElementsByClassName('building-row-' + this.row)[0]
             .getElementsByClassName('building-' + this.col)[0]
             .getElementsByTagName('canvas')[0];
+        
+        if (!canvas) {
+            return;
+        }
         
         let c = canvas.getContext('2d');
 
@@ -152,13 +175,13 @@ export class Generator implements Building {
             c.moveTo(0, canvas.height * (pos + 1) / allCur);
             c.lineTo(canvas.width, canvas.height * (pos + 1) / allCur);
             c.strokeStyle = 'white';
-            c.lineWidth = 1;
+            c.lineWidth = 2;
             c.stroke();
             pos++;
         }
         
         c.fillStyle = 'gray';
-        c.font = "20px Arial";
+        c.font = "40px Arial";
         c.textBaseline = 'middle';
         c.textAlign = 'center';
         c.fillText('+', canvas.width/2, canvas.height/2);
@@ -173,7 +196,51 @@ export class Generator implements Building {
         }
     }
 
-    build(): void {
+    selectTick(): void {
+        let element = document.getElementsByClassName('building-row-' + this.row)[0]
+            .getElementsByClassName('building-' + this.col)[0]
+            .getElementsByTagName('div')[0];
+
+
+        if (this.selectedPhase >= this.currencies.length * 2) {
+            this.selectedPhase = 0;
+        }
+
+        if (this.selectedPhase % 2 == 1) {
+            element.classList.remove('selected-' + this.currencies[(this.selectedPhase - 1) / 2].name);
+            element.classList.add('selected');
+        }
+        else {
+            element.classList.remove('selected');
+            element.classList.add('selected-' + this.currencies[this.selectedPhase / 2].name);
+        }
+
+        this.selectedPhase++;
+    }
+
+    select(): void {
+        this.selected = true;
+        let element = document.getElementsByClassName('building-row-' + this.row)[0]
+            .getElementsByClassName('building-' + this.col)[0]
+            .getElementsByTagName('div')[0];
+        element.classList.add('selected-' + this.currencies[0].name);
+        this.selectedPhase = 0;
+    }
+
+    deselect(): void {
+        this.selected = false;
+        let element = document.getElementsByClassName('building-row-' + this.row)[0]
+            .getElementsByClassName('building-' + this.col)[0]
+            .getElementsByTagName('div')[0];
+        let i = 0;
+        while (i < this.currencies.length) {
+            element.classList.remove('selected-' + this.currencies[i].name);
+            i++;
+        }
+        element.classList.remove('selected');
+    }
+
+    build(amount: number): void {
         let x = 0;
         while (x < this.curCost.length) {
             if (this.curCost[x].amount < this.price[x]) {
@@ -181,18 +248,22 @@ export class Generator implements Building {
             }
             x++;
         }
-        this.amount++;
+        this.amount += amount;
         x = 0;
         while (x < this.curCost.length) {
             this.curCost[x].amount -= this.price[x];
-            this.price[x] = this.basePrice[x] * Math.pow(this.priceGrowth[x], this.amount);
+            this.price[x] = this.basePrice[x] * (Math.pow(this.priceGrowth[x], this.amount) - Math.pow(this.priceGrowth[x], this.amount + amount)) / (1 - this.priceGrowth[x]);
             x++;
+        }
+
+        for (let y of this.currencies) {
+            y.unlocked = true;
         }
     }
 
     rerollBasePrice(pos: number): void {
         if (this.curCost[pos].amount >= this.rerollBasePriceCost) {
-            this.basePrice[pos] = Math.floor((Math.random() * (this.maxPrice + 0.1 - this.minPrice) + this.minPrice) * 10) / 10
+            this.basePrice[pos] = Math.floor((Math.random() * (this.maxPrice + 0.01 - this.minPrice) + this.minPrice) * 100) / 100;
             this.price[pos] = this.basePrice[pos] * Math.pow(this.priceGrowth[pos], this.amount);
             this.curCost[pos].amount -= this.rerollBasePriceCost;
         }
@@ -200,14 +271,14 @@ export class Generator implements Building {
 
     rerollGrowth(pos: number): void {
         if (this.currencies[pos].amount >= this.rerollGrowthCost) {
-            this.growth[pos] = Math.floor((Math.random() * (this.maxGrowth + 0.1 - this.minGrowth) + this.minGrowth) * 10) / 10;
+            this.growth[pos] = Math.floor((Math.random() * (this.maxGrowth + 0.01 - this.minGrowth) + this.minGrowth) * 100) / 100;
             this.currencies[pos].amount -= this.rerollGrowthCost;
         }
     }
 
     rerollPriceGrowth(pos: number): void {
         if (this.curCost[pos].amount >= this.rerollPriceGrowthCost) {
-            this.priceGrowth[pos] = Math.floor(Math.random() * (this.maxPriceGrowth * 10 + 1 - this.minPriceGrowth * 10) + this.minPriceGrowth * 10) / 10;
+            this.priceGrowth[pos] = Math.floor(Math.random() * (this.maxPriceGrowth * 100 + 1 - this.minPriceGrowth * 100) + this.minPriceGrowth * 100) / 100;
             this.price[pos] = this.basePrice[pos] * Math.pow(this.priceGrowth[pos], this.amount);
             this.curCost[pos].amount -= this.rerollPriceGrowthCost;
         }
@@ -222,6 +293,8 @@ export class Generator implements Building {
                 this.curCost[pos] = this.currencies[pos];
             }
 
+            this.currencies[pos].unlocked = true;
+
             this.draw();
         }
     }
@@ -229,7 +302,7 @@ export class Generator implements Building {
     rerollTier(gameInfo: GameInfo): void {
         let x = 0;
         while (x < this.curCost.length) {
-            if (this.curCost[x].amount < this.price[x]) {
+            if (this.curCost[x].amount < this.rerollTierCost) {
                 return;
             }
             x++;
@@ -265,6 +338,8 @@ export class Generator implements Building {
             let num = Math.floor(Math.random() * gameInfo.currencies.length);
 
             this.currencies.push(gameInfo.currencies[num]);
+
+            gameInfo.currencies[num].unlocked = true;
             
             num = Math.floor((Math.random() * (this.maxGrowth + 0.1 - this.minGrowth) + this.minGrowth) * 10) / 10;
 

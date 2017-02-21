@@ -1,53 +1,90 @@
 <h1>
-  {{gameInfo.title}}
+	{{gameInfo.title}}
 </h1>
-<table id="currency-table">
-	<tr *ngFor="let x of gameInfo.currencies">
-		<td [ngClass]="'currency-title title-' + x.name">{{x.name|uppercase}}</td>
-		<td [ngClass]="'currency-amount amount-' + x.name">{{x.amount|number:'1.0-1'}}</td>
-		<td [ngClass]="'currency-income income-' + x.name">+{{x.income|number:'1.0-1'}}/s</td>
-	</tr>
-</table>
+<div class="major-flex">
+	<div id="currency-building-detail-flex">
+		<table id="currency-table">
+			<tr>
+				<td colspan="3" class="currency-header">Currency Table</td>
+			</tr>
+			<tr *ngFor="let x of gameInfo.currencies">
+				<td [ngClass]="'currency-title title-' + x.name" *ngIf="x.unlocked">{{x.name|uppercase}}</td>
+				<td [ngClass]="'currency-amount amount-' + x.name" *ngIf="x.unlocked">{{hasE(x.amount|scientificNotation:'8.3') ? (x.amount|scientificNotation:'8.3') : (x.amount|number:'1.2-2')}}</td>
+				<td [ngClass]="'currency-income income-' + x.name" *ngIf="x.unlocked">+{{hasE(x.income|scientificNotation:'8.3') ? (x.income|scientificNotation:'8.3') : (x.income|number:'1.2-2')}}/s</td>
+			</tr>
+		</table>
 
-<table id="building-table">
-	<tr *ngFor="let x of gameInfo.throwawayGridX" [ngClass]="'building-row building-row-' + x">
-		<td *ngFor="let y of gameInfo.throwawayGridY" (click)="selectBuilding(x, y)" [ngClass]="'building building-' + y">
-			<canvas width="30px" height="30px"></canvas>
-		</td>
-	</tr>
-</table>
+		<building-view [building]="selectedBuilding" [gameInfo]="gameInfo"></building-view>
 
-<div id="add-row">
-	<table id="add-row-buy-table">
+	</div>
+
+	<table id="building-table">
 		<tr>
-			<td class="button-holder">
-				<button (click)="gameInfo.addRow()" [ngClass]="'buy-button'">
-					Add Row
+			<td [attr.colspan]="gameInfo.throwawayGridY.length" class="building-header">Building Grid</td>
+		</tr>
+		<div id="building-flex">
+			<tr *ngFor="let x of gameInfo.throwawayGridX" [ngClass]="'building-row building-row-' + x">
+				<td *ngFor="let y of gameInfo.throwawayGridY" [ngClass]="'building building-' + y">
+					<div *ngIf="y == 0 || (gameInfo.tutorialPhase > 0 && y < 5) || gameInfo.tutorialPhase > 2" (click)="selectBuilding(x, y)">
+						<canvas width="40px" height="40px"></canvas>
+					</div>
+				</td>
+			</tr>
+		</div>
+	</table>
+
+	<div *ngIf="gameInfo.tutorialPhase > 5" id="add-row">
+		<table id="add-row-buy-table">
+			<tr>
+				<td class="button-holder">
+					<button [disabled]="!gameInfo.canBuyRow" (click)="gameInfo.addRow()" [ngClass]="'buy-button'">
+						Add Row
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td class="currency-amount-extra">
+					Price: {{gameInfo.addRowPrice|number:'1.2-2'}} each of the selected currencies
+				</td>
+			</tr>
+		</table>
+		<div id="add-row-price-flex">
+			<table id="add-row-price-table1">
+				<tr *ngFor="let x of gameInfo.currencyThrowaway1">
+					<td *ngIf="gameInfo.currencies[x].unlocked" [ngClass]="'currency-title title-' + gameInfo.currencies[x].name">{{gameInfo.currencies[x].name|uppercase}}</td>
+					<td *ngIf="!gameInfo.currencies[x].unlocked" [ngClass]="'currency-title'">?</td>
+					<td class="select-check">
+						<input [(ngModel)]="gameInfo.addRowSelectedCurrencies[x]" type="checkbox" (change)="gameInfo.updateAddRowPrice()"/>
+					</td>
+				</tr>
+			</table>
+			<table id="add-row-price-table2">
+				<tr *ngFor="let x of gameInfo.currencyThrowaway2">
+					<td *ngIf="gameInfo.currencies[x].unlocked" [ngClass]="'currency-title title-' + gameInfo.currencies[x].name">{{gameInfo.currencies[x].name|uppercase}}</td>
+					<td *ngIf="!gameInfo.currencies[x].unlocked" [ngClass]="'currency-title'">?</td>
+					<td class="select-check">
+						<input [(ngModel)]="gameInfo.addRowSelectedCurrencies[x]" type="checkbox" (change)="gameInfo.updateAddRowPrice()"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="reset-game-holder">
+			<div id="reset-checkboxes">
+				<div>
+					<input type="checkbox" [(ngModel)]="_check1"/>
+				</div>
+				<div>
+					<input type="checkbox" [(ngModel)]="_check2"/>
+				</div>
+				<div>
+					<input type="checkbox" [(ngModel)]="_check3"/>
+				</div>
+			</div>
+			<div id="reset-button-holder">
+				<button (click)="_check1 = false; _check2 = false; _check3 = false; resetGame()" [disabled]="!_check1 || !_check2 || !_check3" class="buy-button">
+					RESET
 				</button>
-			</td>
-		</tr>
-		<tr>
-			<td class="currency-amount-extra">
-				Price: {{gameInfo.addRowPrice|number:'1.0-1'}} each of the selected currencies
-			</td>
-		</tr>
-	</table>
-	<table id="add-row-price-table1">
-		<tr *ngFor="let x of gameInfo.currencyThrowaway1">
-			<td [ngClass]="'currency-title title-' + gameInfo.currencies[x].name">{{gameInfo.currencies[x].name|uppercase}}</td>
-			<td class="select-check">
-				<input [(ngModel)]="gameInfo.addRowSelectedCurrencies[x]" type="checkbox" (change)="gameInfo.updateAddRowPrice()"/>
-			</td>
-		</tr>
-	</table>
-	<table id="add-row-price-table2">
-		<tr *ngFor="let x of gameInfo.currencyThrowaway2">
-			<td [ngClass]="'currency-title title-' + gameInfo.currencies[x].name">{{gameInfo.currencies[x].name|uppercase}}</td>
-			<td class="select-check">
-				<input [(ngModel)]="gameInfo.addRowSelectedCurrencies[x]" type="checkbox" (change)="gameInfo.updateAddRowPrice()"/>
-			</td>
-		</tr>
-	</table>
+			</div>
+		</div>
+	</div>
 </div>
-
-<building-view [building]="selectedBuilding" [gameInfo]="gameInfo"></building-view>

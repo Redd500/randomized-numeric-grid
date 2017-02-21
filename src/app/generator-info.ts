@@ -20,4 +20,8 @@ export class GeneratorInfo {
             col
         );
     }
+
+    loadBuilding(building: Building): Building {
+        return null;
+    }
 }

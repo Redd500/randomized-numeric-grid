@@ -3,4 +3,5 @@ import { GameInfo } from './game-info';
 
 export interface BuildingInfo {
     createBuilding(gameInfo: GameInfo, row: number, col: number): Building;
+    loadBuilding(building: Building): Building;
 }
