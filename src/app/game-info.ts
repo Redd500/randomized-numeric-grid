@@ -307,6 +307,10 @@ export class GameInfo {
             multi = 1;
         }
 
+        if (multi > 100) {
+            multi = 100;
+        }
+
         for (let x of this.buildingGrid) {
             for (let y of x) {
                 let i = 0;

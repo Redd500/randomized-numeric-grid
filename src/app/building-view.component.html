@@ -7,7 +7,9 @@
             <button [disabled]="!building.canBuy" (click)="building.build(gameInfo.buyMultiple)" [ngClass]="'buy-button'">
                 Buy
             </button>
-            Amount: <input class="multiple-buy" type="number" [(ngModel)]="gameInfo.buyMultiple" (change)="gameInfo.updatePrices()"/>
+            Amount: 1-100
+            <input class="multiple-buy" type="number" [(ngModel)]="gameInfo.buyMultiple" (change)="gameInfo.updatePrices()"/>
+            
         </div>
         <div>
             Price: <label *ngIf="gameInfo.tutorialPhase > 4">Reroll all stats including tier</label><br>
