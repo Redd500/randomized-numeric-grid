@@ -36,9 +36,9 @@ export class GameInfo {
         this.gridSizeX = 1;
 		this.gridSizeY = 10;
 
-        this.addRowBasePrice = 1000;
-        this.addRowPriceGrowth = 5;
-        this.addRowSelectGrowth = 3;
+        this.addRowBasePrice = 6000;
+        this.addRowPriceGrowth = 7;
+        this.addRowSelectGrowth = 4;
         this.addRowSelectedCurrencies = [false, false, false, false, false, false, false, false, false, false];
 
         this.currencyThrowaway1 = Array<number>(this.addRowSelectedCurrencies.length/2).fill(1).map((x,i)=>i);
@@ -46,7 +46,7 @@ export class GameInfo {
 
         this.addRowPrice = this.addRowBasePrice * Math.pow(this.addRowPriceGrowth, this.gridSizeX - 1) * Math.pow(this.addRowSelectGrowth, 10);
 
-        this.tutorialPhase = 0;
+        this.tutorialPhase = 10;
 
         this.buyMultiple = 1;
 

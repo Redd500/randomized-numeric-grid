@@ -34,7 +34,7 @@ export class Generator implements Building {
     selectedPhase: number;
     rowMinBasePriceMulti: number;
     rowMaxBasePriceMulti: number;
-    rowMaxPriceGrowthMulti: number;
+    rowMaxPriceGrowthAdd: number;
     rowMinGrowthMulti: number;
     rowMaxGrowthMulti: number;
     rowRerollMulti: number;
@@ -56,7 +56,7 @@ export class Generator implements Building {
         ) {
         this.rowMaxBasePriceMulti = 1.55;
         this.rowMinBasePriceMulti = 1.30;
-        this.rowMaxPriceGrowthMulti = 1.06;
+        this.rowMaxPriceGrowthAdd = 1.06;
         this.rowMaxGrowthMulti = 1.45;
         this.rowMinGrowthMulti = 1.25;
         this.rowRerollMulti = 1.40;
@@ -77,7 +77,7 @@ export class Generator implements Building {
         this.minPrice = Math.floor(minPrice * Math.pow(this.rowMinBasePriceMulti, this.row) * 100) / 100;
         this.maxPrice = Math.floor(maxPrice * Math.pow(this.rowMaxBasePriceMulti, this.row) * 100) / 100;
         this.minPriceGrowth = minPriceGrowth;
-        this.maxPriceGrowth = Math.floor(maxPriceGrowth * Math.pow(this.rowMaxPriceGrowthMulti, this.row) * 100) / 100;
+        this.maxPriceGrowth = maxPriceGrowth + this.rowMaxPriceGrowthAdd * this.row;
         this.basePrice = [];
         this.selected = false;
         this.rerollBasePriceCost = Math.floor(500 * Math.pow(this.rowRerollMulti, this.row) * 100) / 100;
@@ -132,13 +132,26 @@ export class Generator implements Building {
 
         this.priceThrowaway = Array<number>(this.curCost.length).fill(1).map((x,i)=>i);
 
-        for (let x of this.curCost) {
-            let temp = Math.floor((Math.random() * (maxPrice + 0.01 - minPrice) + minPrice) * 100) / 100
+        let x = 0;
+        while (x < this.curCost.length) {
+            let temp = Math.floor((Math.random() * (maxPrice + 0.01 - minPrice) + minPrice) * 100) / 100;
+            let multi = gameInfo.buyMultiple;
+            if (!multi || multi <= 0) {
+                multi = 1;
+            }
 
-            this.price.push(0);
+            if (multi > 100) {
+                multi = 100;
+            }
             this.basePrice.push(temp);
             
             this.priceGrowth.push(Math.floor(Math.random() * (maxPriceGrowth * 100 + 1 - minPriceGrowth * 100) + minPriceGrowth * 100) / 100);
+            this.price.push(this.basePrice[x] * (Math.pow(this.priceGrowth[x], this.amount) - Math.pow(this.priceGrowth[x], this.amount + multi)) / (1 - this.priceGrowth[x]));
+
+            if (this.amount == 0) {
+                this.price[x] -= this.basePrice[x];
+            }
+            x++;
         }
     }
 

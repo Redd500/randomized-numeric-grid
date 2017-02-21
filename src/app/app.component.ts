@@ -82,10 +82,18 @@ export class AppComponent {
 	load(save: GameInfo): void {
 		this.gameInfo = new GameInfo();
 		for (var key in save) {
+			if (key == 'addRowBasePrice' ||
+				key == 'addRowPriceGrowth' ||
+				key == 'addRowSelectGrowth' ||
+				key == 'addRowPrice') {
+					continue;
+				}
 			if (save.hasOwnProperty(key)) {
 				this.gameInfo[key] = save[key];
 			}
 		}
+
+		this.gameInfo.updateAddRowPrice();
 
 		this.gameInfo.buildingsInfo = Array<BuildingInfo>();
 		this.gameInfo.buildingsInfo.push(new GeneratorInfo());
