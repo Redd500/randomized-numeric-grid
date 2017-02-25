@@ -17,8 +17,8 @@
                 <tr *ngFor="let x of building.priceThrowaway">
                     <td *ngIf="building.curCost[x].unlocked" [ngClass]="'currency-title title-' + building.curCost[x].name">{{building.curCost[x].name|uppercase}}</td>
                     <td *ngIf="!building.curCost[x].unlocked" [ngClass]="'currency-title'">?</td>
-                    <td *ngIf="building.price[x] != 0" [ngClass]="'currency-amount amount-' + building.curCost[x].name">{{hasE(building.price[x]|scientificNotation:'8.3') ? (building.price[x]|scientificNotation:'8.3') : (building.price[x]|number:'1.2-2')}}</td>
-                    <td *ngIf="building.price[x] == 0" [ngClass]="'currency-amount amount-' + building.curCost[x].name">Free!</td>
+                    <td *ngIf="building.price[x] > 0.0001" [ngClass]="'currency-amount amount-' + building.curCost[x].name">{{hasE(building.price[x]|scientificNotation:'8.3') ? (building.price[x]|scientificNotation:'8.3') : (building.price[x]|number:'1.2-2')}}</td>
+                    <td *ngIf="building.price[x] <= 0.0001" [ngClass]="'currency-amount amount-' + building.curCost[x].name">Free!</td>
                     <td *ngIf="gameInfo.tutorialPhase > 4" class="button-holder">
                         <button [disabled]="building.curCost[x].amount < building.rerollTierCost" [ngClass]="'currency-amount currency-button amount-' + building.curCost[x].name" (click)="building.rerollTier(gameInfo)">
                             Reroll: {{hasE(building.rerollTierCost|scientificNotation:'8.3') ? (building.rerollTierCost|scientificNotation:'8.3') : (building.rerollTierCost|number:'1.2-2')}}
